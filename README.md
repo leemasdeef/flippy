@@ -1,7 +1,8 @@
 ## TO-DO
 
-- [ ] Deploy to vercel
-- [ ] Setup basic UI
+- [x] Deploy to vercel
+- [x] Setup basic UI
+- [ ] Add card effects
 - [ ] Scaffold project w/ mock data
 - [ ] Add auth w/ NextAuth
 - [ ] Setup database
