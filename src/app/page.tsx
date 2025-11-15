@@ -1,4 +1,4 @@
-import Flashcard from "../../ui/flashcard";
+import Flashcard, { EmptyCard } from "../../ui/flashcard";
 export default function Home() {
   return (
     <>
@@ -7,8 +7,8 @@ export default function Home() {
       </div>
       <section className="flex mx-auto my-40  gap-10">
         <Flashcard />
-        <Flashcard />
-        <Flashcard />
+        <EmptyCard />
+        <EmptyCard />
       </section>
     </>
   );
