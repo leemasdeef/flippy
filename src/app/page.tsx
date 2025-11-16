@@ -1,6 +1,6 @@
 "use client";
 
-interface Card {
+export interface Card {
   id: number;
   value?: string;
   pending: boolean;

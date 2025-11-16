@@ -1,5 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { CardArray } from "@/app/page";
 import {
   Card,
   CardAction,
@@ -20,7 +23,19 @@ interface BgObject {
   reset: string;
 }
 
-export default function Flashcard({ cards, setCards, value, pending }) {
+interface FlashcardProps {
+  cards: CardArray[];
+  setCards: React.Dispatch<React.SetStateAction<CardArray[]>>;
+  value: string;
+  pending: boolean;
+}
+
+export default function Flashcard({
+  cards,
+  setCards,
+  value,
+  pending,
+}: FlashcardProps) {
   const [selectedBg, setSelectedBg] = useState("");
   const [inputValue, setInputValue] = useState("");
 
@@ -73,16 +88,8 @@ export default function Flashcard({ cards, setCards, value, pending }) {
                 />
               )}
             </div>
-            <div className="flex justify-around gap-8">
+            <div className="flex justify-around gap-2">
               <ToggleGroupSpacing handleValueChange={handleValueChange} />
-              <Button
-                value="reset"
-                type="button"
-                onClick={() => setSelectedBg("background")}
-                className="w-2 h-8"
-              >
-                <RotateCcw />
-              </Button>
             </div>
             <div>
               <Button
@@ -91,6 +98,14 @@ export default function Flashcard({ cards, setCards, value, pending }) {
                 className="w-full"
               >
                 <Send />
+              </Button>
+              <Button
+                value="reset"
+                type="button"
+                onClick={() => setSelectedBg("background")}
+                className="w-2 h-8"
+              >
+                <RotateCcw />
               </Button>
             </div>
           </div>
@@ -131,36 +146,48 @@ export function ToggleGroupSpacing({
   return (
     <ToggleGroup
       type="single"
-      variant="outline"
-      spacing={8}
+      variant="default"
+      spacing={1}
       size="sm"
       onValueChange={handleValueChange}
     >
       <ToggleGroupItem
         value="priority1"
         aria-label="Toggle priority 1"
-        className="data-[state=on]:bg-transparent  data-[state=on]:*:[svg]:stroke-black-500 data-[state=off]:*:[svg]:fill-red-500 "
+        className={cn(
+          buttonVariants({ variant: "neutral", size: "sm" }),
+          "data-[state=on]:*:[svg]:fill-white-500 data-[state=off]:*:[svg]:fill-red-500  data-[state=on]:*:[svg]:stroke-black-800"
+        )}
       >
         <Flag />
       </ToggleGroupItem>
       <ToggleGroupItem
         value="priority2"
         aria-label="Toggle priority 2"
-        className="data-[state=on]:bg-transparent data-[state=off]:*:[svg]:fill-orange-500  data-[state=on]:*:[svg]:stroke-black-500"
+        className={cn(
+          buttonVariants({ variant: "neutral", size: "sm" }),
+          "data-[state=off]:*:[svg]:fill-orange-500 data-[state=on]:*:[svg]:fill-white-500  data-[state=on]:*:[svg]:stroke-black-800"
+        )}
       >
         <Flag />
       </ToggleGroupItem>
       <ToggleGroupItem
         value="priority3"
         aria-label="Toggle priority 3"
-        className="data-[state=on]:bg-transparent data-[state=off]:*:[svg]:fill-blue-500  data-[state=on]:*:[svg]:stroke-black-800"
+        className={cn(
+          buttonVariants({ variant: "neutral", size: "sm" }),
+          "data-[state=off]:*:[svg]:fill-blue-500 data-[state=on]:*:[svg]:fill-white-500  data-[state=on]:*:[svg]:stroke-black-800"
+        )}
       >
         <Flag />
       </ToggleGroupItem>
       <ToggleGroupItem
         value="priority4"
         aria-label="Toggle priority 4"
-        className="data-[state=on]:bg-transparent data-[state=off]:*:[svg]:fill-white data-[state=on]:*:[svg]:stroke-black-800"
+        className={cn(
+          buttonVariants({ variant: "neutral", size: "sm" }),
+          "data-[state=off]:*:[svg]:fill-white-500 data-[state=on]:*:[svg]:fill-white-500 data-[state=on]:*:[svg]:stroke-black-800"
+        )}
       >
         <Flag />
       </ToggleGroupItem>
