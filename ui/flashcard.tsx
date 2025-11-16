@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { CardArray } from "@/app/page";
+import { CardArray } from "@/types/card";
 import {
   Card,
   CardAction,
@@ -33,6 +33,7 @@ export default function Flashcard({
   setCards,
   value,
   pending,
+  completed,
 }: FlashcardProps) {
   const [selectedBg, setSelectedBg] = useState("");
   const [inputValue, setInputValue] = useState("");
@@ -56,12 +57,24 @@ export default function Flashcard({
   const handleFormSubmit = (e: any) => {
     e.preventDefault();
     console.log("Clicked!");
+    if (pending) {
+      setCards([
+        ...cards,
+        {
+          id: cards.length === 0 ? 1 : cards[cards.length - 1].id + 1,
+          value: inputValue,
+          pending: false,
+          completed: true,
+        },
+      ]);
+    }
     setCards([
       ...cards,
       {
         id: cards.length === 0 ? 1 : cards[cards.length - 1].id + 1,
         value: inputValue,
         pending: true,
+        completed: false,
       },
     ]);
     setInputValue(""); // reset task input
@@ -89,7 +102,7 @@ export default function Flashcard({
             <div className="flex justify-around gap-2">
               <ToggleGroupSpacing handleValueChange={handleValueChange} />
             </div>
-            <div>
+            <div className="flex flex-col gap-4 items-center">
               <Button
                 type="submit"
                 onClick={(e) => handleFormSubmit(e)}
