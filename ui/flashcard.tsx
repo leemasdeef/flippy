@@ -23,11 +23,9 @@ interface BgObject {
   reset: string;
 }
 
-interface FlashcardProps {
+interface FlashcardProps extends Omit<CardArray, "id"> {
   cards: CardArray[];
   setCards: React.Dispatch<React.SetStateAction<CardArray[]>>;
-  value: string;
-  pending: boolean;
 }
 
 export default function Flashcard({
