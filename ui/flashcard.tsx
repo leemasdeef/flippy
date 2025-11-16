@@ -20,8 +20,12 @@ interface BgObject {
   reset: string;
 }
 
-export default function Flashcard() {
+export default function Flashcard({ cards, setCards, value, pending }) {
   const [selectedBg, setSelectedBg] = useState("");
+  const [inputValue, setInputValue] = useState("");
+
+  console.log("input value", inputValue);
+
   // handle background change on priority select
   const handleValueChange = (value: string) => {
     const bgObject: BgObject = {
@@ -34,16 +38,40 @@ export default function Flashcard() {
 
     setSelectedBg(bgObject[value as keyof BgObject] || "background");
   };
+
+  // handle form submit
+  const handleFormSubmit = (e: any) => {
+    e.preventDefault();
+    console.log("Clicked!");
+    setCards([
+      ...cards,
+      {
+        id: cards.length === 0 ? 1 : cards[cards.length - 1].id + 1,
+        value: inputValue,
+        pending: true,
+      },
+    ]);
+    setInputValue(""); // reset task input
+  };
   return (
     <Card className={`w-full mx-auto max-w-sm ${selectedBg}`}>
-      <CardHeader className="text-center">
-        <CardTitle>Flippy</CardTitle>
-      </CardHeader>
       <CardContent>
-        <form>
+        <form onSubmit={handleFormSubmit}>
           <div className="flex flex-col gap-6">
             <div>
-              <Input id="email" type="email" placeholder="✏️" required />
+              {pending ? (
+                <p className="text-center">{value}</p>
+              ) : (
+                <Input
+                  className="placeholder:text-gray-500"
+                  id="task"
+                  type="text"
+                  placeholder="✏️"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  required
+                />
+              )}
             </div>
             <div className="flex justify-around gap-8">
               <ToggleGroupSpacing handleValueChange={handleValueChange} />
@@ -56,21 +84,27 @@ export default function Flashcard() {
                 <RotateCcw />
               </Button>
             </div>
+            <div>
+              <Button
+                type="submit"
+                onClick={(e) => handleFormSubmit(e)}
+                className="w-full"
+              >
+                <Send />
+              </Button>
+            </div>
           </div>
         </form>
       </CardContent>
-      <CardFooter className="flex-col gap-2">
-        <Button type="submit" className="w-full">
-          <Send />
-        </Button>
-      </CardFooter>
+
+      <CardFooter className="flex-col gap-2"></CardFooter>
     </Card>
   );
 }
 
 export function EmptyCard() {
   return (
-    <Card className="w-full mx-auto max-w-sm">
+    <Card className="w-full mx-auto max-w-sm hidden">
       <CardHeader className="opacity-0">
         <CardTitle>Hidden</CardTitle>
       </CardHeader>
