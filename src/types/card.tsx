@@ -1,6 +1,7 @@
 export interface CardArray {
   id: number;
-  value?: string;
+  value: string;
   pending: boolean;
   completed: boolean;
+  selectedBg?: string;
 }

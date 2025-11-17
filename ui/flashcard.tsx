@@ -34,11 +34,10 @@ export default function Flashcard({
   value,
   pending,
   completed,
+  selectedBg,
 }: FlashcardProps) {
-  const [selectedBg, setSelectedBg] = useState("");
   const [inputValue, setInputValue] = useState("");
-
-  console.log("input value", inputValue);
+  const [background, setBackground] = useState("");
 
   // handle background change on priority select
   const handleValueChange = (value: string) => {
@@ -50,42 +49,47 @@ export default function Flashcard({
       reset: "background",
     };
 
-    setSelectedBg(bgObject[value as keyof BgObject] || "background");
+    setBackground(bgObject[value as keyof BgObject] || "background");
   };
 
   // handle form submit
   const handleFormSubmit = (e: any) => {
     e.preventDefault();
-    console.log("Clicked!");
+    e.stopPropagation();
+
     if (pending) {
+      const updatedCards = cards.map((card) => {
+        const matches = card.value === value;
+
+        if (matches) {
+          return { ...card, pending: false, completed: true };
+        }
+        return card;
+      });
+
+      setCards(updatedCards);
+    } else {
       setCards([
         ...cards,
         {
           id: cards.length === 0 ? 1 : cards[cards.length - 1].id + 1,
           value: inputValue,
-          pending: false,
-          completed: true,
+          pending: true,
+          completed: false,
+          selectedBg: background,
         },
       ]);
     }
-    setCards([
-      ...cards,
-      {
-        id: cards.length === 0 ? 1 : cards[cards.length - 1].id + 1,
-        value: inputValue,
-        pending: true,
-        completed: false,
-      },
-    ]);
-    setInputValue(""); // reset task input
+    setBackground("");
+    setInputValue("");
   };
   return (
-    <Card className={`w-full mx-auto max-w-sm ${selectedBg}`}>
+    <Card className={`w-full mx-auto max-w-sm ${selectedBg || background}`}>
       <CardContent>
         <form onSubmit={handleFormSubmit}>
           <div className="flex flex-col gap-6">
             <div>
-              {pending ? (
+              {pending || completed ? (
                 <p className="text-center">{value}</p>
               ) : (
                 <Input
@@ -100,7 +104,9 @@ export default function Flashcard({
               )}
             </div>
             <div className="flex justify-around gap-2">
-              <ToggleGroupSpacing handleValueChange={handleValueChange} />
+              <div className={!pending && !completed ? "visible" : "invisible"}>
+                <ToggleGroupSpacing handleValueChange={handleValueChange} />
+              </div>
             </div>
             <div className="flex flex-col gap-4 items-center">
               <Button
@@ -110,14 +116,16 @@ export default function Flashcard({
               >
                 <Send />
               </Button>
-              <Button
-                value="reset"
-                type="button"
-                onClick={() => setSelectedBg("background")}
-                className="w-2 h-8"
-              >
-                <RotateCcw />
-              </Button>
+              <div className={!pending && !completed ? "visible" : "invisible"}>
+                <Button
+                  value="reset"
+                  type="button"
+                  onClick={() => setBackground("background")}
+                  className="w-2 h-8"
+                >
+                  <RotateCcw />
+                </Button>
+              </div>
             </div>
           </div>
         </form>
@@ -130,7 +138,7 @@ export default function Flashcard({
 
 export function EmptyCard() {
   return (
-    <Card className="w-full mx-auto max-w-sm hidden">
+    <Card className="w-full mx-auto max-w-sm invisible">
       <CardHeader className="opacity-0">
         <CardTitle>Hidden</CardTitle>
       </CardHeader>
