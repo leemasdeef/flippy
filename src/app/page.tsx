@@ -31,6 +31,18 @@ export default function Home() {
           {cards.length > 0 &&
             cards
               .filter((card) => card.pending)
+              .sort((b, a) => {
+                const colourPriority: Record<string, number> = {
+                  "bg-red-500": 1,
+                  "bg-orange-500": 2,
+                  "bg-blue-500": 3,
+                  "bg-white-500": 4,
+                  "": 5,
+                };
+                const priorityA = colourPriority[a.selectedBg || ""] || 999;
+                const priorityB = colourPriority[b.selectedBg || ""] || 999;
+                return priorityA - priorityB;
+              })
               .map((card, index) => (
                 <div
                   key={card.id}
@@ -38,13 +50,6 @@ export default function Home() {
                   style={{
                     top: `${index * 40}px`,
                     zIndex: index + 1,
-                  }}
-                  onClick={() => {
-                    // Move clicked card to end of array (front of stack)
-                    setCards((prev) => {
-                      const newCards = prev.filter((c) => c.id !== card.id);
-                      return [...newCards, card];
-                    });
                   }}
                 >
                   <Flashcard
@@ -87,7 +92,7 @@ export default function Home() {
                     value={card.value}
                     pending={card.pending}
                     completed={card.completed}
-                    selectedBg={card.selectedBg}
+                    selectedBg="bg-green-500"
                   />
                 </div>
               ))}
