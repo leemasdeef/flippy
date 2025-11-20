@@ -25,7 +25,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { LoginSchema } from "../../../schemas";
-import { login } from "../../../actions/login";
+import { login } from "../../actions/login";
 import FormSuccess from "../form-success";
 import FormError from "../form-error";
 
