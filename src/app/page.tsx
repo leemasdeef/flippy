@@ -5,6 +5,7 @@ import Flashcard, { EmptyCard } from "../../ui/flashcard";
 import { CardArray } from "@/types/card";
 
 import LoginForm from "../components/auth/login-form";
+import AuthDialog from "@/components/auth/auth-dialog";
 
 export default function Home() {
   const [cards, setCards] = useState<CardArray[]>([]);
@@ -15,7 +16,7 @@ export default function Home() {
         <h1 className="text-5xl">Flippy.</h1>
       </div>
       <div>
-        <LoginForm />
+        <AuthDialog />
       </div>
       <section className="flex animate-in spin-in zoom-in duration-500 justify-evenly mx-auto my-40 ">
         {/* Column 1: Create cards */}

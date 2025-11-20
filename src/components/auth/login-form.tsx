@@ -1,5 +1,5 @@
 "use-client";
-import React from "react";
+import React, { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,7 +12,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import RegisterForm from "./register-form";
 import Socials from "./socials";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
@@ -26,9 +25,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { LoginSchema } from "../../../schemas";
+import { login } from "../../../actions/login";
+import FormSuccess from "../form-success";
+import FormError from "../form-error";
 
-export default function LoginForm() {
-  const form = useForm<z.infer<typeof LoginSchema>>({
+interface LoginFormProps {
+  setIsRegister: (value: boolean) => void;
+}
+
+export default function LoginForm({ setIsRegister }: LoginFormProps) {
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
+  const loginForm = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: "",
@@ -37,73 +46,82 @@ export default function LoginForm() {
   });
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
-    console.log(values);
+    setError("");
+    setSuccess("");
+    startTransition(() => {
+      login(values).then((data) => {
+        setError(data.error);
+        setSuccess(data.success);
+      });
+    });
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button>Login</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Login</DialogTitle>
-          <DialogDescription>
-            Please enter your details below.
-          </DialogDescription>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid gap-4">
-              <div className="grid gap-3">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          placeholder="flippy@email.com"
-                          type="email"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                ></FormField>
-              </div>
-              <div className="grid gap-3">
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          type="password"
-                          placeholder="******"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                ></FormField>
-              </div>
-              <Socials />
-            </div>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="neutral">Cancel</Button>
-              </DialogClose>
-              <Button type="submit">Login</Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+    <Form {...loginForm}>
+      <form onSubmit={loginForm.handleSubmit(onSubmit)}>
+        <div className="grid gap-4">
+          <div className="grid gap-3">
+            <FormField
+              control={loginForm.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder="flippy@email.com"
+                      type="email"
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            ></FormField>
+          </div>
+          <div className="grid gap-3">
+            <FormField
+              control={loginForm.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="password"
+                      placeholder="******"
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            ></FormField>
+          </div>
+          <FormError message={error} />
+          <FormSuccess message={success} />
+          <Socials />
+        </div>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="neutral" onClick={() => setIsRegister(false)}>
+              Cancel
+            </Button>
+          </DialogClose>
+          <Button
+            type="button"
+            onClick={() => setIsRegister(true)}
+            disabled={isPending}
+          >
+            Register
+          </Button>
+          <Button type="submit" disabled={isPending}>
+            Login
+          </Button>
+        </DialogFooter>
+      </form>
+    </Form>
   );
 }
