@@ -4,4 +4,5 @@ export interface CardArray {
   pending: boolean;
   completed: boolean;
   selectedBg?: string;
+  justCreated?: boolean;
 }

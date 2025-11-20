@@ -4,6 +4,8 @@ import { useState } from "react";
 import Flashcard, { EmptyCard } from "../../ui/flashcard";
 import { CardArray } from "@/types/card";
 
+import LoginForm from "../components/auth/login-form";
+
 export default function Home() {
   const [cards, setCards] = useState<CardArray[]>([]);
   console.log("Cards array:", cards);
@@ -11,6 +13,9 @@ export default function Home() {
     <>
       <div className="text-center mt-3">
         <h1 className="text-5xl">Flippy.</h1>
+      </div>
+      <div>
+        <LoginForm />
       </div>
       <section className="flex animate-in spin-in zoom-in duration-500 justify-evenly mx-auto my-40 ">
         {/* Column 1: Create cards */}
@@ -46,10 +51,19 @@ export default function Home() {
               .map((card, index) => (
                 <div
                   key={card.id}
-                  className="absolute animate-in spin-in zoom-in transition-all duration-500 ease-out hover:scale-105 hover:z-50 hover:-translate hover:rotate-2 hover:shadow-2xl cursor-pointer"
+                  className="absolute animate-in spin-in zoom-in transition-all duration-300 ease-out hover:scale-105 hover:z-50 hover:-translate hover:rotate-2 hover:shadow-2xl cursor-pointer"
                   style={{
                     top: `${index * 40}px`,
                     zIndex: index + 1,
+                  }}
+                  onAnimationEnd={() => {
+                    if (card.justCreated) {
+                      setCards((prev) =>
+                        prev.map((c) =>
+                          c.id === card.id ? { ...c, justCreated: false } : c
+                        )
+                      );
+                    }
                   }}
                 >
                   <Flashcard

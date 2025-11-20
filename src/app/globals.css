@@ -61,6 +61,18 @@
   --shadow-shadow: var(--shadow);
   --font-weight-base: 600;
   --font-weight-heading: 900;
+
+  --animate-flip-move: flip-move 2s ease-in-out infinite;
+
+  @keyframes flip-move {
+    0% {
+      transform: translateX(0) rotateY(0deg);
+    }
+
+    100% {
+      transform: translateX(100%) rotateY(360deg);
+    }
+  }
 }
 
 @layer base {

@@ -77,6 +77,7 @@ export default function Flashcard({
           pending: true,
           completed: false,
           selectedBg: background,
+          justCreated: true,
         },
       ]);
     }
@@ -109,11 +110,7 @@ export default function Flashcard({
               </div>
             </div>
             <div className="flex flex-col gap-4 items-center">
-              <Button
-                type="submit"
-                onClick={(e) => handleFormSubmit(e)}
-                className="w-full"
-              >
+              <Button type="submit" className="w-full">
                 <Send />
               </Button>
               <div className={!pending && !completed ? "visible" : "invisible"}>
