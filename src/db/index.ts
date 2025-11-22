@@ -1,8 +1,6 @@
 import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
 import { config } from "dotenv";
-import { usersTable } from "./schema";
-import { eq } from "drizzle-orm";
 
 import * as schema from "./schema";
 config({ path: ".env.local" }); // or .env.local

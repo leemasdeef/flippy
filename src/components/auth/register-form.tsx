@@ -1,4 +1,4 @@
-"use-client";
+"use client";
 import React, { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
@@ -23,9 +23,13 @@ import FormError from "../form-error";
 
 interface RegisterFormProps {
   setIsRegister: (value: boolean) => void;
+  onSuccess?: () => void;
 }
 
-export default function RegisterForm({ setIsRegister }: RegisterFormProps) {
+export default function RegisterForm({
+  setIsRegister,
+  onSuccess,
+}: RegisterFormProps) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -47,6 +51,14 @@ export default function RegisterForm({ setIsRegister }: RegisterFormProps) {
         console.log(data);
         setError(data.error);
         setSuccess(data.success);
+
+        if (data.success) {
+          if (onSuccess) {
+            setTimeout(() => {
+              onSuccess();
+            }, 1000);
+          }
+        }
       });
     });
   };

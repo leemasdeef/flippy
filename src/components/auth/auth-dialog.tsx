@@ -12,14 +12,18 @@ import {
 } from "@/components/ui/dialog";
 import LoginForm from "./login-form";
 import RegisterForm from "./register-form";
-export default function AuthDialog() {
-  const [isOpen, setOpen] = useState(false);
+
+interface AuthDialogProp {
+  onLoginSuccess: () => void;
+}
+export default function AuthDialog({ onLoginSuccess }: AuthDialogProp) {
+  const [open, setOpen] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
   console.log("setIsRegister in parent: ", setIsRegister);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Login</Button>
+        <Button onClick={() => setOpen(true)}>Login</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -29,8 +33,18 @@ export default function AuthDialog() {
           </DialogDescription>
         </DialogHeader>
         <div>
-          {!isRegister && <LoginForm setIsRegister={setIsRegister} />}
-          {isRegister && <RegisterForm setIsRegister={setIsRegister} />}
+          {!isRegister && (
+            <LoginForm
+              setIsRegister={setIsRegister}
+              onSuccess={onLoginSuccess}
+            />
+          )}
+          {isRegister && (
+            <RegisterForm
+              setIsRegister={setIsRegister}
+              onSuccess={() => setOpen(false)}
+            />
+          )}
         </div>
       </DialogContent>
     </Dialog>

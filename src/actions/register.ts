@@ -1,11 +1,13 @@
 "use server";
 
 import { RegisterSchema } from "../../schemas";
-import bcrypt from "bcrypt";
+
 import { db } from "@/db/index";
 import { eq } from "drizzle-orm";
-import { usersTable } from "@/db/schema";
+import { user } from "@/db/schema";
 import * as z from "zod";
+import { auth } from "@/server/auth";
+
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const validatedFields = RegisterSchema.safeParse(values);
   if (!validatedFields.success) {
@@ -13,12 +15,11 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   }
 
   const { name, email, password } = validatedFields.data;
-  const hashedPassword = await bcrypt.hash(password, 10);
 
   // check if user already exists
 
-  const existing = await db.query.usersTable.findFirst({
-    where: eq(usersTable.email, email),
+  const existing = await db.query.user.findFirst({
+    where: eq(user.email, email),
   });
 
   if (existing) {
@@ -27,11 +28,13 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
 
   // insert user
 
-  const user = await db.insert(usersTable).values({
-    name,
-    email,
-    password: hashedPassword,
+  await auth.api.signUpEmail({
+    body: {
+      email,
+      password,
+      name,
+    },
   });
 
-  return { success: "Account was created successfully." };
+  return { success: "Account was created successfully. Redirecting..." };
 };

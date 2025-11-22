@@ -3,20 +3,27 @@
 import { useState } from "react";
 import Flashcard, { EmptyCard } from "../../ui/flashcard";
 import { CardArray } from "@/types/card";
+import { Button } from "@/components/ui/button";
 
-import LoginForm from "../components/auth/login-form";
 import AuthDialog from "@/components/auth/auth-dialog";
+import { authClient } from "@/server/auth-client";
+import ProfileCard from "@/components/auth/profile-card";
 
 export default function Home() {
   const [cards, setCards] = useState<CardArray[]>([]);
-  console.log("Cards array:", cards);
+  const { data: session, isPending, error, refetch } = authClient.useSession(); // check for logged in user
+
+  if (isPending) return <div>Loading...</div>; // wait for session
+  if (error) return <div>Error</div>;
+
   return (
     <>
       <div className="text-center mt-3">
         <h1 className="text-5xl">Flippy.</h1>
       </div>
-      <div>
-        <AuthDialog />
+      <div className="flex justify-center items-center mt-5">
+        {!session && <AuthDialog onLoginSuccess={() => refetch()} />}
+        {session && <ProfileCard />}
       </div>
       <section className="flex animate-in spin-in zoom-in duration-500 justify-evenly mx-auto my-40 ">
         {/* Column 1: Create cards */}

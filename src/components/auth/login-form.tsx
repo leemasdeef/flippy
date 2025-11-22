@@ -1,4 +1,4 @@
-"use-client";
+"use client";
 import React, { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,12 +28,17 @@ import { LoginSchema } from "../../../schemas";
 import { login } from "../../actions/login";
 import FormSuccess from "../form-success";
 import FormError from "../form-error";
+import { authClient } from "@/server/auth-client";
 
 interface LoginFormProps {
   setIsRegister: (value: boolean) => void;
+  onSuccess?: () => void;
 }
 
-export default function LoginForm({ setIsRegister }: LoginFormProps) {
+export default function LoginForm({
+  setIsRegister,
+  onSuccess,
+}: LoginFormProps) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -46,12 +51,17 @@ export default function LoginForm({ setIsRegister }: LoginFormProps) {
   });
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+    // refetch login state to update UI
     setError("");
     setSuccess("");
     startTransition(() => {
       login(values).then((data) => {
         setError(data.error);
         setSuccess(data.success);
+
+        if (data.success && onSuccess) {
+          onSuccess();
+        }
       });
     });
   };
@@ -102,7 +112,6 @@ export default function LoginForm({ setIsRegister }: LoginFormProps) {
           </div>
           <FormError message={error} />
           <FormSuccess message={success} />
-          <Socials />
         </div>
         <DialogFooter>
           <DialogClose asChild>
@@ -122,6 +131,7 @@ export default function LoginForm({ setIsRegister }: LoginFormProps) {
           </Button>
         </DialogFooter>
       </form>
+      <Socials />
     </Form>
   );
 }
