@@ -113,7 +113,7 @@ export default function LoginForm({
           <FormError message={error} />
           <FormSuccess message={success} />
         </div>
-        <DialogFooter>
+        <DialogFooter className="mt-5">
           <DialogClose asChild>
             <Button variant="neutral" onClick={() => setIsRegister(false)}>
               Cancel

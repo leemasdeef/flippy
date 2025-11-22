@@ -110,9 +110,11 @@ export default function Flashcard({
               </div>
             </div>
             <div className="flex flex-col gap-4 items-center">
-              <Button type="submit" className="w-full">
-                <Send />
-              </Button>
+              <div className={completed ? "invisible" : "visible w-full"}>
+                <Button type="submit" className="w-full">
+                  <Send />
+                </Button>
+              </div>
               <div className={!pending && !completed ? "visible" : "invisible"}>
                 <Button
                   value="reset"

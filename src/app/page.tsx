@@ -8,12 +8,18 @@ import { Button } from "@/components/ui/button";
 import AuthDialog from "@/components/auth/auth-dialog";
 import { authClient } from "@/server/auth-client";
 import ProfileCard from "@/components/auth/profile-card";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function Home() {
   const [cards, setCards] = useState<CardArray[]>([]);
   const { data: session, isPending, error, refetch } = authClient.useSession(); // check for logged in user
 
-  if (isPending) return <div>Loading...</div>; // wait for session
+  if (isPending)
+    return (
+      <div className="flex h-dvh justify-center items-center">
+        <Spinner className="size-6 text-red-500" />
+      </div>
+    ); // wait for session
   if (error) return <div>Error</div>;
 
   return (

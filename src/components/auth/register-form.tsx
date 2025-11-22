@@ -147,9 +147,8 @@ export default function RegisterForm({
           </div>
           <FormError message={error} />
           <FormSuccess message={success} />
-          <Socials />
         </div>
-        <DialogFooter>
+        <DialogFooter className="mt-5">
           <DialogClose asChild>
             <Button variant="neutral" onClick={() => setIsRegister(false)}>
               Cancel
@@ -160,6 +159,7 @@ export default function RegisterForm({
           </Button>
         </DialogFooter>
       </form>
+      <Socials />
     </Form>
   );
 }
