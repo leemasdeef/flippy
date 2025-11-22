@@ -20,7 +20,7 @@ export default function ProfileCard() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button>{user.name}</Button>
+        <Button>Welcome, {user.name}</Button>
       </PopoverTrigger>
       <PopoverContent>
         <div>

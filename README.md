@@ -6,10 +6,10 @@
 - [x] Add pending card stack
 - [x] Add completed card stack
 - [ ] Scaffold project w/ mock data
-- [x] Add auth w/ NextAuth
+- [x] Add auth w/ betterauth
 - [x] Setup database
 - [ ] Attach database to UI
-- [ ] Add form validation client-side
+- [x] Add form validation client-side
 
 ## UI
 
