@@ -85,13 +85,13 @@ export default function Flashcard({
     setInputValue("");
   };
   return (
-    <Card className={`w-full mx-auto max-w-sm ${selectedBg || background}`}>
+    <Card className={`w-full mx-auto max-w-3xs ${selectedBg || background}`}>
       <CardContent>
         <form onSubmit={handleFormSubmit}>
           <div className="flex flex-col gap-6">
             <div>
               {pending || completed ? (
-                <p className="text-center">{value}</p>
+                <p className="text-center text-pretty">{value}</p>
               ) : (
                 <Input
                   className="placeholder:text-gray-500"

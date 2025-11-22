@@ -1,3 +1,15 @@
+# TO-FIX
+
+- [x] card width increases when text is long
+- [x] no text-wrapping
+- [ ] pending stack disappears when clicking on completed card
+- [ ] register account doesnt automatically login
+- [ ] on successful register, no notifcation is rendered. dialog remains on register page
+- [ ] add 5 per day card limit
+- [ ] cards are not saved to users
+- [ ] card background buttons dont reset toggle on card submit
+- [ ] mobile breakpoints
+
 # TO-DO
 
 - [x] Deploy to vercel
@@ -5,7 +17,6 @@
 - [x] Add card effects
 - [x] Add pending card stack
 - [x] Add completed card stack
-- [ ] Scaffold project w/ mock data
 - [x] Add auth w/ betterauth
 - [x] Setup database
 - [ ] Attach database to UI
