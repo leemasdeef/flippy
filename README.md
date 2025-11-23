@@ -6,10 +6,10 @@
 - [x] register account doesnt automatically login
 - [x] on successful register, no notifcation is rendered. dialog remains on register page
 - [x] animation on logout
-- [ ] add 5 per day card limit
+- [x] add 5 per day card limit
 - [ ] cards are not saved to users
 - [ ] card background buttons dont reset toggle on card submit
-- [ ] mobile breakpoints
+- [x] mobile breakpoints
 
 # TO-DO
 

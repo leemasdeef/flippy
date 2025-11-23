@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Flashcard, { EmptyCard } from "../../ui/flashcard";
 import { CardArray } from "@/types/card";
-import { Button } from "@/components/ui/button";
+import confetti from "canvas-confetti";
 
 import AuthDialog from "@/components/auth/auth-dialog";
 import { authClient } from "@/server/auth-client";
@@ -13,6 +13,20 @@ import { Spinner } from "@/components/ui/spinner";
 export default function Home() {
   const [cards, setCards] = useState<CardArray[]>([]);
   const { data: session, isPending, error, refetch } = authClient.useSession(); // check for logged in user
+  const isReady = cards.length === 5; // set max to-do of 5.
+  // check if all to-dos complete
+  const isComplete =
+    cards.filter((card) => card.completed === true).length === 5;
+  useEffect(() => {
+    if (isComplete) {
+      confetti({
+        particleCount: 300,
+        spread: 120,
+        startVelocity: 40,
+        origin: { y: 0.7 },
+      });
+    }
+  }, [isComplete]);
 
   if (isPending)
     return (
@@ -33,15 +47,18 @@ export default function Home() {
       </div>
       <section className="flex flex-col gap-4 my-5 md:animate-in md:flex-row spin-in zoom-in duration-500 justify-evenly mx-auto md:my-40 ">
         {/* Column 1: Create cards */}
-        <div>
-          <Flashcard
-            cards={cards}
-            setCards={setCards}
-            value=""
-            pending={false}
-            completed={false}
-          />
-        </div>
+
+        {!isReady && (
+          <div>
+            <Flashcard
+              cards={cards}
+              setCards={setCards}
+              value=""
+              pending={false}
+              completed={false}
+            />
+          </div>
+        )}
 
         {/* Column 2: Pending cards */}
         <div className="relative w-59 ml-30 md:ml-0">
