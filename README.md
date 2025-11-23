@@ -1,3 +1,69 @@
+<h1 align='center'>Flippy.</h1>
+
+![Preview](images/phone-screenshots.png)
+
+<p align='center'> Minimialistic to-do-list app to get things done.</p>
+
+
+
+<p align='center'>[Live Demo](https://flippy-eight.vercel.app)</p>
+
+<h2>Built with</h2>
+
+- NextJS
+- React
+- Typescript
+- Shadcn UI
+- Better-auth
+- Drizzle
+
+
+</br>
+
+<h2>Features</h2>
+- Simple design, where to-dos must be completed in the order in which they are set.
+- Maximum of five to-dos per day, in order to reinforce keeping daily tasks simple.
+- Priority colour-coding.
+- Responsive design.
+- Daily streaks (soon).
+- Login/Profiles.
+
+
+<h2>Development</h2>
+
+Here are the steps to start the project locally.
+
+1. Clone the repository.
+
+```sh
+HTTPS - $ git clone https://github.com/leemasdeef/flippy.git
+or
+SSH - $ git clone git@github.com:alex-dishen/flippy.git
+```
+
+2. Move to the cloned directory.
+
+```sh
+$ cd flippy
+```
+
+3. Install the dependencies.
+
+```sh
+$ npm i
+or
+$ yarn
+```
+
+4. Create <code>.env.local</code> file in the root directory for local development environment variables.
+
+5. Connect project to Vercel via Vercel dashboard.
+
+6. Start with pnpm dev OR npm run dev
+
+
+
+
 # TO-FIX
 
 - [x] card width increases when text is long
@@ -6,10 +72,10 @@
 - [x] register account doesnt automatically login
 - [x] on successful register, no notifcation is rendered. dialog remains on register page
 - [x] animation on logout
-- [x] add 5 per day card limit
+- [ ] add 5 per day card limit
 - [ ] cards are not saved to users
 - [ ] card background buttons dont reset toggle on card submit
-- [x] mobile breakpoints
+- [ ] mobile breakpoints
 
 # TO-DO
 
