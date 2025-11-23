@@ -38,7 +38,7 @@ Here are the steps to start the project locally.
 ```sh
 HTTPS - $ git clone https://github.com/leemasdeef/flippy.git
 or
-SSH - $ git clone git@github.com:alex-dishen/flippy.git
+SSH - $ git clone git@github.com:leemasdeef/flippy.git
 ```
 
 2. Move to the cloned directory.
