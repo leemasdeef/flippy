@@ -28,7 +28,6 @@ import { LoginSchema } from "../../../schemas";
 import { login } from "../../actions/login";
 import FormSuccess from "../form-success";
 import FormError from "../form-error";
-import { authClient } from "@/server/auth-client";
 
 interface LoginFormProps {
   setIsRegister: (value: boolean) => void;
@@ -40,8 +39,8 @@ export default function LoginForm({
   onSuccess,
 }: LoginFormProps) {
   const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | undefined>("");
-  const [success, setSuccess] = useState<string | undefined>("");
+  const [error, setError] = useState<string | undefined>();
+  const [success, setSuccess] = useState<string | undefined>();
   const loginForm = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {

@@ -23,7 +23,12 @@ export default function AuthDialog({ onLoginSuccess }: AuthDialogProp) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button onClick={() => setOpen(true)}>Login</Button>
+        <Button
+          className="animate-in spin-in zoom-in transition-all duration-300 ease-out"
+          onClick={() => setOpen(true)}
+        >
+          Login
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -42,7 +47,7 @@ export default function AuthDialog({ onLoginSuccess }: AuthDialogProp) {
           {isRegister && (
             <RegisterForm
               setIsRegister={setIsRegister}
-              onSuccess={() => setOpen(false)}
+              onSuccess={onLoginSuccess}
             />
           )}
         </div>

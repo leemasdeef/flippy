@@ -31,7 +31,7 @@ export default function Home() {
         {!session && <AuthDialog onLoginSuccess={() => refetch()} />}
         {session && <ProfileCard />}
       </div>
-      <section className="flex animate-in spin-in zoom-in duration-500 justify-evenly mx-auto my-40 ">
+      <section className="flex flex-col gap-4 my-5 md:animate-in md:flex-row spin-in zoom-in duration-500 justify-evenly mx-auto md:my-40 ">
         {/* Column 1: Create cards */}
         <div>
           <Flashcard
@@ -44,7 +44,7 @@ export default function Home() {
         </div>
 
         {/* Column 2: Pending cards */}
-        <div className="relative w-59">
+        <div className="relative w-59 ml-30 md:ml-0">
           {/* bottom card for stacking visual effect*/}
           <EmptyCard />
           {cards.length > 0 &&
@@ -92,7 +92,7 @@ export default function Home() {
               ))}
         </div>
         {/* Column 3: Completed cards */}
-        <div className="relative w-59">
+        <div className="relative w-59 ml-40 md:ml-0">
           {/* bottom card for stacking visual effect */}
           <EmptyCard />
           {cards.length > 0 &&

@@ -3,8 +3,9 @@
 - [x] card width increases when text is long
 - [x] no text-wrapping
 - [ ] pending stack disappears when clicking on completed card
-- [ ] register account doesnt automatically login
-- [ ] on successful register, no notifcation is rendered. dialog remains on register page
+- [x] register account doesnt automatically login
+- [x] on successful register, no notifcation is rendered. dialog remains on register page
+- [x] animation on logout
 - [ ] add 5 per day card limit
 - [ ] cards are not saved to users
 - [ ] card background buttons dont reset toggle on card submit
@@ -21,6 +22,7 @@
 - [x] Setup database
 - [ ] Attach database to UI
 - [x] Add form validation client-side
+- [ ] Daily streak system
 
 ## UI
 

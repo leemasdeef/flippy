@@ -31,19 +31,19 @@ export default function RegisterForm({
   onSuccess,
 }: RegisterFormProps) {
   const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | undefined>("");
-  const [success, setSuccess] = useState<string | undefined>("");
+  const [error, setError] = useState<string | undefined>();
+  const [success, setSuccess] = useState<string | undefined>();
   const registerForm = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
       email: "",
       password: "",
       confirmPassword: "",
+      name: "",
     },
   });
 
   const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
-    console.log("Button clicked!");
     setError("");
     setSuccess("");
     startTransition(() => {
@@ -52,12 +52,10 @@ export default function RegisterForm({
         setError(data.error);
         setSuccess(data.success);
 
-        if (data.success) {
-          if (onSuccess) {
-            setTimeout(() => {
-              onSuccess();
-            }, 1000);
-          }
+        if (data.success && onSuccess) {
+          setTimeout(() => {
+            onSuccess();
+          }, 1000);
         }
       });
     });
