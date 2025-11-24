@@ -21,12 +21,15 @@
 </br>
 
 <h2>Features</h2>
+
 - Simple design, where to-dos must be completed in the order in which they are set.
 - Maximum of five to-dos per day, in order to reinforce keeping daily tasks simple.
 - Priority colour-coding.
 - Responsive design.
 - Daily streaks (soon).
 - Login/Profiles.
+
+</br>
 
 
 <h2>Development</h2>
