@@ -1,148 +1,182 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Flashcard, { EmptyCard } from "../components/ui/flashcard";
-import { CardArray } from "@/types/card";
-import confetti from "canvas-confetti";
+import React from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
-import AuthDialog from "@/components/auth/auth-dialog";
-import { authClient } from "@/server/auth-client";
-import ProfileCard from "@/components/auth/profile-card";
-import { Spinner } from "@/components/ui/spinner";
-
-export default function Home() {
-  const [cards, setCards] = useState<CardArray[]>([]);
-  const { data: session, isPending, error, refetch } = authClient.useSession(); // check for logged in user
-  const isReady = cards.length === 5; // set max to-do of 5.
-  // check if all to-dos complete
-  const isComplete =
-    cards.filter((card) => card.completed === true).length === 5;
-  useEffect(() => {
-    if (isComplete) {
-      confetti({
-        particleCount: 300,
-        spread: 120,
-        startVelocity: 40,
-        origin: { y: 0.7 },
-      });
-    }
-  }, [isComplete]);
-
-  if (isPending)
-    return (
-      <div className="flex h-dvh justify-center items-center">
-        <Spinner className="size-6 text-red-500" />
-      </div>
-    ); // wait for session
-  if (error) return <div>Error</div>;
-
+export default function FlippyLanding() {
   return (
-    <>
-      <div className="text-center mt-3">
-        <h1 className="text-5xl">Flippy.</h1>
-      </div>
-      <div className="flex justify-center items-center mt-5">
-        {!session && <AuthDialog onLoginSuccess={() => refetch()} />}
-        {session && <ProfileCard />}
-      </div>
-      <section className="flex flex-col gap-4 my-5 md:animate-in md:flex-row spin-in zoom-in duration-500 justify-evenly mx-auto md:my-40 ">
-        {/* Column 1: Create cards */}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ type: "spring", stiffness: 200, damping: 18 }}
+      className="min-h-screen bg-background text-foreground antialiased"
+    >
+      <Header />
+      <Hero />
+      <Features />
+      <HowItWorks />
+      <CTA />
+      <Footer />
+    </motion.div>
+  );
+}
 
-        {!isReady && (
-          <div>
-            <Flashcard
-              cards={cards}
-              setCards={setCards}
-              value=""
-              pending={false}
-              completed={false}
-            />
-          </div>
-        )}
+function Header() {
+  return (
+    <header className="sticky top-0 z-50 bg-secondary-background border-b-4 border-black">
+      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="text-main-foreground px-4 py-1  font-heading tracking-tight text-5xl">
+          Flippy.
+        </div>
+        <nav className="hidden sm:flex gap-6 font-bold">
+          <Button className="bg-color-white">
+            <a href="#features">Features</a>
+          </Button>
+          <Button className="bg-color-white">
+            <a href="#how">How it works</a>
+          </Button>
+          <Button>
+            <a href="#cta">Try Flippy</a>
+          </Button>
+        </nav>
+      </div>
+    </header>
+  );
+}
 
-        {/* Column 2: Pending cards */}
-        <div className="relative w-59 ml-30 md:ml-0">
-          {/* bottom card for stacking visual effect*/}
-          <EmptyCard />
-          {cards.length > 0 &&
-            cards
-              .filter((card) => card.pending)
-              .sort((b, a) => {
-                const colourPriority: Record<string, number> = {
-                  "bg-red-500": 1,
-                  "bg-orange-500": 2,
-                  "bg-blue-500": 3,
-                  "bg-white-500": 4,
-                  "": 5,
-                };
-                const priorityA = colourPriority[a.selectedBg || ""] || 999;
-                const priorityB = colourPriority[b.selectedBg || ""] || 999;
-                return priorityA - priorityB;
-              })
-              .map((card, index) => (
-                <div
-                  key={card.id}
-                  className="absolute animate-in spin-in zoom-in transition-all duration-300 ease-out hover:scale-105 hover:z-50 hover:-translate hover:rotate-2 hover:shadow-2xl cursor-pointer"
-                  style={{
-                    top: `${index * 40}px`,
-                    zIndex: index + 1,
-                  }}
-                  onAnimationEnd={() => {
-                    if (card.justCreated) {
-                      setCards((prev) =>
-                        prev.map((c) =>
-                          c.id === card.id ? { ...c, justCreated: false } : c
-                        )
-                      );
-                    }
-                  }}
-                >
-                  <Flashcard
-                    cards={cards}
-                    setCards={setCards}
-                    value={card.value}
-                    pending={card.pending}
-                    completed={card.completed}
-                    selectedBg={card.selectedBg}
-                  />
-                </div>
-              ))}
+function Hero() {
+  return (
+    <section className="border-b-4 border-black bg-cross-weave-white min-h-[80vh] flex items-center">
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ type: "spring", stiffness: 200, damping: 18 }}
+        className="max-w-3xl mx-auto px-6 text-center"
+      >
+        <div className="text-sm mb-3">Build focus.</div>
+        <h1 className="text-6xl font-heading leading-tight">
+          Your <span className="italic">tasks</span>.
+          <span className="block">
+            On <span className="italic">flipcards.</span>
+          </span>
+        </h1>
+        <p className="mt-4 text-lg">
+          Flippy is a minimalist to‑do app inspired by physical cards. Flip to
+          complete task, focus only on what matters, and avoid clutter.
+        </p>
+        <div className="mt-6 flex justify-center gap-4">
+          <Button className="text-md">
+            <a href="#cta">Get started</a>
+          </Button>
+          <Button className="bg-color-white text-md">
+            <a href="#how">See how it works</a>
+          </Button>
         </div>
-        {/* Column 3: Completed cards */}
-        <div className="relative w-59 ml-40 md:ml-0">
-          {/* bottom card for stacking visual effect */}
-          <EmptyCard />
-          {cards.length > 0 &&
-            cards
-              .filter((card) => card.completed)
-              .map((card, index) => (
-                <div
-                  key={card.id}
-                  className="absolute animate-in spin-in zoom-in transition-all duration-300 ease-out hover:scale-105 hover:z-50 hover:-translate hover:rotate-2 hover:shadow-2xl cursor-pointer"
-                  style={{
-                    top: `${index * 40}px`,
-                    zIndex: index + 1,
-                  }}
-                  onClick={() => {
-                    // Move clicked card to end of array (front of stack)
-                    setCards((prev) => {
-                      const newCards = prev.filter((c) => c.id !== card.id);
-                      return [...newCards, card];
-                    });
-                  }}
-                >
-                  <Flashcard
-                    cards={cards}
-                    setCards={setCards}
-                    value={card.value}
-                    pending={card.pending}
-                    completed={card.completed}
-                    selectedBg="bg-green-500"
-                  />
-                </div>
-              ))}
+      </motion.div>
+    </section>
+  );
+}
+
+function Features() {
+  return (
+    <section className="py-24 bg-cross-weave-pink">
+      <motion.section
+        id="features"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.6 }}
+        transition={{ type: "spring", stiffness: 100, damping: 7 }}
+        className="max-w-7xl mx-auto px-6"
+      >
+        <h2 className="text-4xl font-heading  mb-12">Designed for focus</h2>
+        <div className="grid sm:grid-cols-3 gap-8">
+          <Feature
+            title="Flipcard UI"
+            desc="Every to‑do sits on its own bold card — flip it for details only when needed."
+          />
+          <Feature
+            title="Blazing fast"
+            desc="No bloat or distractions. Your tasks load instantly."
+          />
+          <Feature
+            title="Hyper focus"
+            desc="5 tasks everyday. Focus on what is important."
+          />
         </div>
-      </section>
-    </>
+      </motion.section>
+    </section>
+  );
+}
+
+function Feature({ title, desc }: { title: string; desc: string }) {
+  return (
+    <div className="bg-secondary-background border-2 border-border p-6 shadow-shadow">
+      <h3 className="font-heading text-xl mb-2 ">{title}</h3>
+      <p>{desc}</p>
+    </div>
+  );
+}
+
+function HowItWorks() {
+  return (
+    <section className="border-y-4 border-black bg-cross-weave-white py-24">
+      <motion.section
+        id="how"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.4 }}
+        transition={{ type: "spring", stiffness: 100, damping: 7 }}
+        className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center"
+      >
+        <div className="border-2 border-border bg-secondary-background shadow-shadow h-72 flex items-center justify-center font-bold">
+          Flip demo
+        </div>
+        <div>
+          <h2 className="text-4xl font-heading  mb-6">How Flippy works</h2>
+          <ol className="space-y-3 text-lg">
+            <li>1. Write your task on a card.</li>
+            <li>2. Choose the priority.</li>
+            <li>3. You have 5 tasks to complete every day.</li>
+            <li>4. Swipe.</li>
+          </ol>
+        </div>
+      </motion.section>
+    </section>
+  );
+}
+
+function CTA() {
+  return (
+    <section className="py-24 text-center bg-cross-weave-pink">
+      <motion.section
+        id="cta"
+        initial={{ opacity: 0, scale: 0.9 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, amount: 0.6 }}
+        transition={{ type: "spring", stiffness: 100, damping: 8 }}
+      >
+        <h2 className="text-5xl font-heading  mb-4">Stay focused.</h2>
+        <p className="text-lg mb-6">Try the minimal to‑do experience today.</p>
+        <Button className="text-md">
+          <a href="#">Launch Flippy</a>
+        </Button>
+      </motion.section>
+    </section>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="border-t-4 border-black py-10 bg-secondary-background">
+      <div className="max-w-7xl mx-auto px-6 flex justify-between font-bold">
+        <div>© {new Date().getFullYear()} Flippy</div>
+        <div className="flex gap-6">
+          <span>Privacy</span>
+          <span>Terms</span>
+        </div>
+      </div>
+    </footer>
   );
 }
