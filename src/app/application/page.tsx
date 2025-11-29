@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Flashcard, { EmptyCard } from "@/components/ui/flashcard";
 import { CardArray } from "@/types/card";
 import confetti from "canvas-confetti";
@@ -10,13 +11,26 @@ import { authClient } from "@/server/auth-client";
 import ProfileCard from "@/components/auth/profile-card";
 import { Spinner } from "@/components/ui/spinner";
 
+// Motion preset
+const stackItem = {
+  initial: { opacity: 0, scale: 0.9, rotateY: -90 },
+  animate: { opacity: 1, scale: 1, rotateY: 0 },
+  exit: { opacity: 0, scale: 0.85, rotateY: 90 },
+  transition: {
+    type: "spring",
+    stiffness: 300,
+    damping: 26,
+  },
+} as const;
+
 export default function Home() {
   const [cards, setCards] = useState<CardArray[]>([]);
-  const { data: session, isPending, error, refetch } = authClient.useSession(); // check for logged in user
-  const isReady = cards.length === 5; // set max to-do of 5.
-  // check if all to-dos complete
+  const { data: session, isPending, error, refetch } = authClient.useSession();
+
+  const isReady = cards.length === 5;
   const isComplete =
     cards.filter((card) => card.completed === true).length === 5;
+
   useEffect(() => {
     if (isComplete) {
       confetti({
@@ -33,7 +47,8 @@ export default function Home() {
       <div className="flex h-dvh justify-center items-center">
         <Spinner className="size-6 text-red-500" />
       </div>
-    ); // wait for session
+    );
+
   if (error) return <div>Error</div>;
 
   return (
@@ -41,15 +56,20 @@ export default function Home() {
       <div className="text-center mt-3">
         <h1 className="text-5xl">Flippy.</h1>
       </div>
+
       <div className="flex justify-center items-center mt-5">
         {!session && <AuthDialog onLoginSuccess={() => refetch()} />}
         {session && <ProfileCard />}
       </div>
-      <section className="flex flex-col gap-4 my-5 md:animate-in md:flex-row spin-in zoom-in duration-500 justify-evenly mx-auto md:my-40 ">
-        {/* Column 1: Create cards */}
 
+      {/* Perspective enables true 3D flips */}
+      <section
+        className="flex flex-col gap-4 my-5 md:flex-row justify-evenly mx-auto md:my-40"
+        style={{ perspective: 1400 }}
+      >
+        {/*Column 1 – Create Card */}
         {!isReady && (
-          <div>
+          <motion.div layout {...stackItem}>
             <Flashcard
               cards={cards}
               setCards={setCards}
@@ -57,15 +77,15 @@ export default function Home() {
               pending={false}
               completed={false}
             />
-          </div>
+          </motion.div>
         )}
 
-        {/* Column 2: Pending cards */}
+        {/* Column 2 – Pending Stack */}
         <div className="relative w-59 ml-30 md:ml-0">
-          {/* bottom card for stacking visual effect*/}
           <EmptyCard />
-          {cards.length > 0 &&
-            cards
+
+          <AnimatePresence>
+            {cards
               .filter((card) => card.pending)
               .sort((b, a) => {
                 const colourPriority: Record<string, number> = {
@@ -75,72 +95,100 @@ export default function Home() {
                   "bg-white-500": 4,
                   "": 5,
                 };
-                const priorityA = colourPriority[a.selectedBg || ""] || 999;
-                const priorityB = colourPriority[b.selectedBg || ""] || 999;
-                return priorityA - priorityB;
+
+                return (
+                  (colourPriority[a.selectedBg || ""] || 999) -
+                  (colourPriority[b.selectedBg || ""] || 999)
+                );
               })
               .map((card, index) => (
-                <div
+                <motion.div
                   key={card.id}
-                  className="absolute animate-in spin-in zoom-in transition-all duration-300 ease-out hover:scale-105 hover:z-50 hover:-translate hover:rotate-2 hover:shadow-2xl cursor-pointer"
-                  style={{
-                    top: `${index * 40}px`,
-                    zIndex: index + 1,
-                  }}
-                  onAnimationEnd={() => {
-                    if (card.justCreated) {
+                  layout
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  onDragEnd={(e, info) => {
+                    if (info.offset.x > 120) {
                       setCards((prev) =>
                         prev.map((c) =>
-                          c.id === card.id ? { ...c, justCreated: false } : c
+                          c.id === card.id
+                            ? {
+                                ...c,
+                                pending: false,
+                                completed: true,
+                              }
+                            : c
                         )
                       );
                     }
                   }}
+                  {...stackItem}
+                  whileHover={{
+                    scale: 1.05,
+                    rotate: 2,
+                    zIndex: 50,
+                  }}
+                  transition={{
+                    ...stackItem.transition,
+                    delay: index * 0.05,
+                  }}
+                  className="absolute cursor-grab"
+                  style={{
+                    top: `${index * 40}px`,
+                    scale: 1 - index * 0.015,
+                    zIndex: index + 1,
+                    transformStyle: "preserve-3d",
+                  }}
                 >
-                  <Flashcard
-                    cards={cards}
-                    setCards={setCards}
-                    value={card.value}
-                    pending={card.pending}
-                    completed={card.completed}
-                    selectedBg={card.selectedBg}
-                  />
-                </div>
+                  <Flashcard {...card} cards={cards} setCards={setCards} />
+                </motion.div>
               ))}
+          </AnimatePresence>
         </div>
-        {/* Column 3: Completed cards */}
+
+        {/* Column 3 – Completed Stack */}
         <div className="relative w-59 ml-40 md:ml-0">
-          {/* bottom card for stacking visual effect */}
           <EmptyCard />
-          {cards.length > 0 &&
-            cards
+
+          <AnimatePresence>
+            {cards
               .filter((card) => card.completed)
               .map((card, index) => (
-                <div
+                <motion.div
                   key={card.id}
-                  className="absolute animate-in spin-in zoom-in transition-all duration-300 ease-out hover:scale-105 hover:z-50 hover:-translate hover:rotate-2 hover:shadow-2xl cursor-pointer"
+                  layout
+                  {...stackItem}
+                  whileHover={{
+                    scale: 1.05,
+                    rotate: 2,
+                    zIndex: 50,
+                  }}
+                  transition={{
+                    ...stackItem.transition,
+                    delay: index * 0.05,
+                  }}
+                  onClick={() => {
+                    setCards((prev) => {
+                      const next = prev.filter((c) => c.id !== card.id);
+                      return [...next, card];
+                    });
+                  }}
+                  className="absolute cursor-pointer"
                   style={{
                     top: `${index * 40}px`,
                     zIndex: index + 1,
-                  }}
-                  onClick={() => {
-                    // Move clicked card to end of array (front of stack)
-                    setCards((prev) => {
-                      const newCards = prev.filter((c) => c.id !== card.id);
-                      return [...newCards, card];
-                    });
+                    transformStyle: "preserve-3d",
                   }}
                 >
                   <Flashcard
+                    {...card}
                     cards={cards}
                     setCards={setCards}
-                    value={card.value}
-                    pending={card.pending}
-                    completed={card.completed}
                     selectedBg="bg-green-500"
                   />
-                </div>
+                </motion.div>
               ))}
+          </AnimatePresence>
         </div>
       </section>
     </>

@@ -4,8 +4,6 @@
 
 <p align='center'> Minimialistic to-do-list app to get things done.</p>
 
-
-
 <p align='center'>[Live Demo](https://flippy-eight.vercel.app)</p>
 
 <h2>Built with</h2>
@@ -16,7 +14,6 @@
 - Shadcn UI
 - Better-auth
 - Drizzle
-
 
 </br>
 
@@ -30,7 +27,6 @@
 - Login/Profiles.
 
 </br>
-
 
 <h2>Development</h2>
 
@@ -64,9 +60,6 @@ $ yarn
 
 6. Start with pnpm dev OR npm run dev
 
-
-
-
 # TO-FIX
 
 - [x] card width increases when text is long
@@ -75,10 +68,10 @@ $ yarn
 - [x] register account doesnt automatically login
 - [x] on successful register, no notifcation is rendered. dialog remains on register page
 - [x] animation on logout
-- [ ] add 5 per day card limit
+- [x] add 5 per day card limit
 - [ ] cards are not saved to users
 - [ ] card background buttons dont reset toggle on card submit
-- [ ] mobile breakpoints
+- [x] mobile breakpoints
 
 # TO-DO
 

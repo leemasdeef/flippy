@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function FlippyLanding() {
   return (
@@ -30,6 +31,16 @@ function Header() {
           Flippy.
         </div>
         <nav className="hidden sm:flex gap-6 font-bold">
+          <Button className="relative bg-color-white">
+            <Link href="https://github.com/leemasdeef/flippy">
+              <Image
+                src="/github-mark.svg"
+                alt="GitHub"
+                width={25}
+                height={25}
+              ></Image>
+            </Link>
+          </Button>
           <Button className="bg-color-white">
             <a href="#features">Features</a>
           </Button>
@@ -37,7 +48,7 @@ function Header() {
             <a href="#how">How it works</a>
           </Button>
           <Button>
-            <a href="#cta">Try Flippy</a>
+            <Link href="/application">Try Flippy.</Link>
           </Button>
         </nav>
       </div>
@@ -94,7 +105,7 @@ function Features() {
         <div className="grid sm:grid-cols-3 gap-8">
           <Feature
             title="Flipcard UI"
-            desc="Every to‑do sits on its own bold card — flip it for details only when needed."
+            desc="Every to‑do sits on its own bold card — flip it to ship it."
           />
           <Feature
             title="Blazing fast"
@@ -130,8 +141,8 @@ function HowItWorks() {
         transition={{ type: "spring", stiffness: 100, damping: 7 }}
         className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center"
       >
-        <div className="border-2 border-border bg-secondary-background shadow-shadow h-72 flex items-center justify-center font-bold">
-          Flip demo
+        <div className="relative border-2 border-border shadow-shadow h-72 flex items-center justify-center font-bold">
+          <Image src="/flippy-demo.png" alt="Demo" fill={true}></Image>
         </div>
         <div>
           <h2 className="text-4xl font-heading  mb-6">How Flippy works</h2>
@@ -160,7 +171,7 @@ function CTA() {
         <h2 className="text-5xl font-heading  mb-4">Stay focused.</h2>
         <p className="text-lg mb-6">Try the minimal to‑do experience today.</p>
         <Button className="text-md">
-          <a href="#">Launch Flippy</a>
+          <Link href="/application">Launch Flippy.</Link>
         </Button>
       </motion.section>
     </section>
