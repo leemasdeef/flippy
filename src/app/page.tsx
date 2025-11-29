@@ -81,7 +81,7 @@ function Hero() {
           <Button className="text-md">
             <a href="#cta">Get started</a>
           </Button>
-          <Button className="bg-color-white text-md">
+          <Button className="bg-secondary-background text-md">
             <a href="#how">See how it works</a>
           </Button>
         </div>
