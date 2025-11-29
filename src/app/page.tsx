@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Flashcard, { EmptyCard } from "../../ui/flashcard";
+import Flashcard, { EmptyCard } from "../components/ui/flashcard";
 import { CardArray } from "@/types/card";
 import confetti from "canvas-confetti";
 
